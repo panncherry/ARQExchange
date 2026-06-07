@@ -54,12 +54,18 @@ UI tests run against mock data through the `-UITestingMockData` launch argument,
 
 ## Screenshots And Recording
 
-Add final submission media here:
+### Short screen recording of typing, selecting a currency, and swapping currencies
+<img width="295" height="640" alt="Simulator Screen Recording - iPhone 17 - 2026-06-06 at 21 50 01" src="https://github.com/user-attachments/assets/c245b96e-6704-485f-9623-684dfaef29ac" />
 
-- Calculator screen
-- Currency picker bottom sheet
-- Error state with retry
-- Short screen recording of typing, selecting a currency, and swapping currencies
+<hr></hr>
+
+### Screenshots
+<p align="center">
+    <img width="220" alt="Amount Entry" src="https://github.com/user-attachments/assets/c47b193d-d8f1-46f9-bb3f-67ca48dd3a08" />
+    <img width="220" alt="Currency Selection" src="https://github.com/user-attachments/assets/a1477e60-3102-46fa-91be-27948ebb3d9d" />
+    <img width="220" alt="Home Screen" src="https://github.com/user-attachments/assets/1787b15e-6a87-4695-ac76-ebef28b68720" />
+    <img width="220" alt="Transfer Details" src="https://github.com/user-attachments/assets/e7d01a96-0bab-47d1-8696-a33fd14b4653" />
+</p>
 
 ## Architecture
 
@@ -184,5 +190,4 @@ The main interactive and asserted UI elements have accessibility identifiers, in
 - Wire `GET /v1/tickers-currencies` when the endpoint becomes available, while keeping the local catalog as fallback.
 - Add a disk cache for last-known rates if offline read-only behavior becomes a product requirement.
 - Add CI for build, unit tests, and UI tests on pull requests.
-- Add one simulator screenshot to the README for submission polish.
 - Consider a streaming transport only if the API and product requirements move beyond indicative calculator rates.
