@@ -24,6 +24,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		08466D382FD25EED000A0A87 /* PreviewContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewContent.swift; sourceTree = "<group>"; };
 		08CCE22A2FD0B46F0071B012 /* ARQExchange.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ARQExchange.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		08CCE2372FD0B4720071B012 /* ARQExchangeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ARQExchangeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		08CCE2412FD0B4720071B012 /* ARQExchangeUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ARQExchangeUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -72,6 +73,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		08466D372FD25ED8000A0A87 /* PreviewContent */ = {
+			isa = PBXGroup;
+			children = (
+				08466D382FD25EED000A0A87 /* PreviewContent.swift */,
+			);
+			path = PreviewContent;
+			sourceTree = "<group>";
+		};
 		08CCE2212FD0B46F0071B012 = {
 			isa = PBXGroup;
 			children = (
@@ -79,6 +88,7 @@
 				08CCE23A2FD0B4720071B012 /* ARQExchangeTests */,
 				08CCE2442FD0B4720071B012 /* ARQExchangeUITests */,
 				08CCE22B2FD0B46F0071B012 /* Products */,
+				08466D372FD25ED8000A0A87 /* PreviewContent */,
 			);
 			sourceTree = "<group>";
 		};

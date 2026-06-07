@@ -1,43 +1,97 @@
-//
-//  ARQExchangeUITests.swift
-//  ARQExchangeUITests
-//
-//  Created by Pann Cherry on 6/3/26.
-//
-
 import XCTest
 
 final class ARQExchangeUITests: XCTestCase {
 
     override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-
-        // In UI tests it is usually best to stop immediately when a failure occurs.
         continueAfterFailure = false
-
-        // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
-    }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
 
     @MainActor
-    func testExample() throws {
-        // UI tests must launch the application that they test.
+    func testCalculatorScreenLoads() throws {
+        let app = launchApp()
+
+        XCTAssertTrue(app.otherElements["appReady"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.navigationBars.staticTexts["Exchange calculator"].exists)
+        XCTAssertTrue(app.descendants(matching: .any)["currencyInputCard"].firstMatch.exists)
+        XCTAssertTrue(inputRow(in: app, identifier: "topInputRow").exists)
+    }
+
+    @MainActor
+    func testEnteringAmountUpdatesConvertedValue() throws {
+        let app = launchApp()
+        waitForAppReady(app)
+
+        typeAmount("99999", in: app, row: "topInputRow")
+
+        let bottomAmount = app.staticTexts["bottomAmountLabel"]
+        XCTAssertTrue(bottomAmount.waitForExistence(timeout: 2))
+        XCTAssertFalse(bottomAmount.label.contains("$0.00"))
+    }
+
+    @MainActor
+    func testCurrencyPickerSelection() throws {
+        let app = launchApp()
+        waitForAppReady(app)
+
+        currencyButton(in: app, identifier: "bottomCurrencyButton").tap()
+        let pickerSheet = app.descendants(matching: .any)["currencyPickerSheet"].firstMatch
+        XCTAssertTrue(pickerSheet.waitForExistence(timeout: 2))
+
+        let copOption = app.staticTexts["COP"]
+        XCTAssertTrue(copOption.waitForExistence(timeout: 2))
+        copOption.tap()
+
+        let rateDescription = app.staticTexts["rateDescription"]
+        XCTAssertTrue(rateDescription.waitForExistence(timeout: 5))
+        XCTAssertTrue(rateDescription.label.contains("COP"))
+    }
+
+    @MainActor
+    func testSwapCurrencies() throws {
+        let app = launchApp()
+        waitForAppReady(app)
+
+        typeAmount("10000", in: app, row: "topInputRow")
+        app.buttons["keyboardDoneButton"].tap()
+        app.buttons["swapButton"].tap()
+
+        XCTAssertTrue(currencyButton(in: app, identifier: "topCurrencyButton").label.contains("MXN"))
+        XCTAssertTrue(currencyButton(in: app, identifier: "bottomCurrencyButton").label.contains("USDc"))
+        XCTAssertTrue(inputRow(in: app, identifier: "bottomInputRow").exists)
+        XCTAssertTrue(app.staticTexts["bottomAmountLabel"].label.contains("100.00"))
+    }
+
+    @MainActor
+    private func launchApp() -> XCUIApplication {
         let app = XCUIApplication()
+        app.launchArguments = ["-UITestingMockData"]
         app.launch()
-
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // XCUIAutomation Documentation
-        // https://developer.apple.com/documentation/xcuiautomation
+        return app
     }
 
     @MainActor
-    func testLaunchPerformance() throws {
-        // This measures how long it takes to launch your application.
-        measure(metrics: [XCTApplicationLaunchMetric()]) {
-            XCUIApplication().launch()
-        }
+    private func waitForAppReady(_ app: XCUIApplication) {
+        XCTAssertTrue(app.otherElements["appReady"].waitForExistence(timeout: 10))
+    }
+
+    @MainActor
+    private func typeAmount(_ amount: String, in app: XCUIApplication, row identifier: String) {
+        inputRow(in: app, identifier: identifier).tap()
+        app.typeText(amount)
+    }
+
+    @MainActor
+    private func inputRow(in app: XCUIApplication, identifier: String) -> XCUIElement {
+        let element = app.descendants(matching: .any)[identifier].firstMatch
+        XCTAssertTrue(element.waitForExistence(timeout: 2))
+        return element
+    }
+
+    /// Quote rows use `Button`; USDc uses a plain label with the same accessibility identifier.
+    @MainActor
+    private func currencyButton(in app: XCUIApplication, identifier: String) -> XCUIElement {
+        let element = app.descendants(matching: .any)[identifier].firstMatch
+        XCTAssertTrue(element.waitForExistence(timeout: 2))
+        return element
     }
 }
