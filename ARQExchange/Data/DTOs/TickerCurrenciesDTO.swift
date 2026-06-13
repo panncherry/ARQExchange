@@ -8,16 +8,12 @@ import Foundation
 /// ```
 ///
 /// Picker currencies use `SupportedCurrencies` until this endpoint ships.
-struct TickerCurrenciesResponse: Sendable, Equatable {
-    let codes: [String]
-
-    init(codes: [String]) {
-        self.codes = codes
-    }
+struct TickerCurrenciesResponse: Equatable {
+    let codes: [TickerCode]
 }
 
 extension TickerCurrenciesResponse: Decodable {
     nonisolated init(from decoder: Decoder) throws {
-        codes = try [String](from: decoder)
+        codes = try [TickerCode](from: decoder)
     }
 }
