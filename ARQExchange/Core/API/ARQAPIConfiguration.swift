@@ -4,7 +4,7 @@ import Foundation
 ///
 /// Keeps transport-level decisions in one place so production, testing, and preview
 /// clients can share the same endpoint construction while varying timeouts or base URLs.
-struct ARQAPIConfiguration: Sendable {
+struct ARQAPIConfiguration {
     /// Base API URL, including the `/v1` path segment used by all endpoints.
     let baseURL: URL
     /// Per-request timeout applied to both `URLRequest` and the backing `URLSession`.
@@ -13,6 +13,22 @@ struct ARQAPIConfiguration: Sendable {
     let resourceTimeout: TimeInterval
     /// Explicit user agent sent with API requests for service-side diagnostics.
     let userAgent: String
+    /// Optional bearer token provider for authenticated API requests.
+    let bearerTokenProvider: (@Sendable () async throws -> String?)?
+
+    init(
+        baseURL: URL,
+        requestTimeout: TimeInterval,
+        resourceTimeout: TimeInterval,
+        userAgent: String,
+        bearerTokenProvider: (@Sendable () async throws -> String?)? = nil
+    ) {
+        self.baseURL = baseURL
+        self.requestTimeout = requestTimeout
+        self.resourceTimeout = resourceTimeout
+        self.userAgent = userAgent
+        self.bearerTokenProvider = bearerTokenProvider
+    }
 
     /// Max age for indicative (calculator) rates before a background refresh runs.
     nonisolated static let indicativeRateMaxAge: TimeInterval = 30
