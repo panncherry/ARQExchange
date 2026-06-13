@@ -4,7 +4,7 @@ import Foundation
 ///
 /// This type is intentionally thin: endpoint construction and HTTP concerns stay in
 /// `ARQAPIEndpoint`/`NetworkClient`, while DTO validation and domain conversion happen here.
-struct ARQAPIClient: ExchangeRateAPI, Sendable {
+struct ARQAPIClient: ExchangeRateAPI {
     private let networkClient: NetworkClientProtocol
     private let configuration: ARQAPIConfiguration
 
@@ -60,6 +60,17 @@ struct ARQAPIClient: ExchangeRateAPI, Sendable {
             throw ARQAPIError.invalidResponse(message: "The API response did not contain any usable ticker entries.")
         }
         return rates
+    }
+
+    /// Authorized request with bearer token.
+    private func authorizedRequest(_ request: URLRequest) async throws -> URLRequest {
+        var request = request
+        guard let token = try await configuration.bearerTokenProvider?(), !token.isEmpty else {
+            return request
+        }
+
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        return request
     }
 
     /// Sends a typed API request while preserving internal diagnostics and user-safe errors.
